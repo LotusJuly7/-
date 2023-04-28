@@ -70,25 +70,17 @@ class ServerThread extends Thread {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(mSocket.getInputStream(), "utf-8"));
 			Log.i("服务器", "开始线程");
-			String s;
-			StringBuilder result = null;
-			while ((s = reader.readLine()) != null && s.length() >= 0) { // 如果写>0的话，会漏掉空的行
-				Log.i("服务器", "读取行");
-				if (result == null) {
-					result = new StringBuilder();
-				} else {
-					result.append('\n');
-				}
-				result.append(s);
+			StringBuilder result = new StringBuilder();
+			char[] buffer = new char[1024];
+			int len;
+			while ((len = reader.read(buffer)) != -1) { // 如果写>0的话，会漏掉空的行
+				Log.i("服务器", "读取一段数据");
+				result.append(buffer, 0, len);
 			}
 			Log.i("服务器", "读取完数据");
-			if (result != null) {
-				String message = result.toString();
-				Log.i("数据", message);
-				handler.obtainMessage(2, new Object[] {ipAddress, message}).sendToTarget();
-			} else {
-				handler.obtainMessage(2, new Object[] {ipAddress, ""}).sendToTarget();
-			}
+			String message = result.toString();
+			Log.i("数据", message);
+			handler.obtainMessage(2, new Object[] {ipAddress, message}).sendToTarget();
             /*// 返回数据
 			OutputStream os = null;
             try {
