@@ -19,6 +19,7 @@
         <item name="android:windowBackground">@null</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:colorPrimary">#d3d5dd</item>
     </style>
 
 </resources>
