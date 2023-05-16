@@ -65,13 +65,18 @@ public class MainActivity extends Activity {
 		input = (EditText) findViewById(R.id.input);
 		targetIp = (EditText) findViewById(R.id.targetIp);
 		
-		registerReceiver(mWifiReceiver, new IntentFilter(WifiManager.NETWORK_STATE_CHANGED_ACTION));
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+		intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
+		registerReceiver(mWifiReceiver, intentFilter);
 		
 		serverThread = new WebServerThread(handler);
 		serverThread.start();
 	}
 	static final int port = 52013;
 	BroadcastReceiver mWifiReceiver = new BroadcastReceiver() {
+		String wifiIpText = null;
+		boolean isApEnabled = false;
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
@@ -92,11 +97,20 @@ public class MainActivity extends Activity {
             		    		.append((ipAddress >> 16) & 0xFF).append('.')
             		    		.append((ipAddress >> 24) & 0xFF)
             		    		.toString();
-            		    title.setText(ipAddressUrl);
+            		    wifiIpText = ipAddressUrl;
             		} else {
-            			title.setText("WiFi未连接");
+            			wifiIpText = null;
             		}
                 }
+            } else if (intent.getAction().equals("android.net.wifi.WIFI_AP_STATE_CHANGED")) {
+            	isApEnabled = intent.getIntExtra("wifi_state", 0) == 13;
+            }
+            if (wifiIpText != null) {
+            	title.setText(wifiIpText);
+            } else if (isApEnabled) {
+            	title.setText("WiFi热点已开启");
+            } else {
+            	title.setText("WiFi未连接");
             }
         }
     };
