@@ -23,19 +23,17 @@ public class WebServerThread extends Thread {
 		try {
 		    mServerSocket = new ServerSocket(MainActivity.port);
 		    //mServerSocket.setReuseAddress(true);
-		    while (isLooping) {
+		    while (isLooping && !mServerSocket.isClosed()) {
 		        // 接收客户端套接字。
-		        if (!mServerSocket.isClosed()) {
-		        	try {
-			        	// 阻塞接受客户端。
-			            Socket socket = mServerSocket.accept();
-			            byte[] ipAddress = socket.getInetAddress().getAddress();
-			            Log.i("服务器", "===server accept===");
-				        new ServerThread(socket, handler, ipAddress).start();
-		        	} catch (SocketException e) {
-		        		break;
-		        	}
-		        }
+		        try {
+		        	// 阻塞接受客户端。
+		            Socket socket = mServerSocket.accept();
+		            byte[] ipAddress = socket.getInetAddress().getAddress();
+		            Log.i("服务器", "===server accept===");
+			        new ServerThread(socket, handler, ipAddress).start();
+	        	} catch (SocketException e) {
+	        		break;
+	        	}
 		    }
 		    if (!mServerSocket.isClosed()) {
     			mServerSocket.close();
@@ -49,7 +47,9 @@ public class WebServerThread extends Thread {
 	public void destroy() {
 		isLooping = false;
 		try {
-			mServerSocket.close();
+			if (!mServerSocket.isClosed()) {
+    			mServerSocket.close();
+    		}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
