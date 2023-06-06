@@ -1,9 +1,7 @@
 package com.hqk35;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -32,7 +30,6 @@ public class WebClientThread extends Thread {
             PrintWriter printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(   //步骤二
                     socket.getOutputStream(), "UTF-8")), true);
             Log.i("客户端", "得到PrintWriter");
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
             printWriter.print(message);
             printWriter.flush();
             printWriter.close();
