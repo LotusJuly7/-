@@ -21,7 +21,6 @@
     </com.hqk35.StatusBarInsetsLayout>
     
     <ScrollView
-        android:id="@+id/listScroll"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight="1"
