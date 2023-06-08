@@ -62,8 +62,7 @@ public class ChatLayout extends LinearLayout {
 	};
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-	public void showMessage(String message, boolean isSend) {
-		long time = System.currentTimeMillis();
+	public void showMessage(long time, String message, boolean isSend) {
 		listView1.addView(new MessageLayout(context, dateFormat.format(time), message, isSend), messageItemLp);
 		if (isSend && disconnect.getVisibility() == View.VISIBLE) {
 			input.setText("");

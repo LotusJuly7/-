@@ -93,10 +93,32 @@ public class DeviceLayout extends LinearLayout {
 		*/
 	}
 	
+	private static class ChatLog {
+		long time;
+		String message;
+		boolean isSend;
+		ChatLog next = null;
+		ChatLog(long time, String message, boolean isSend) {
+			this.time = time;
+			this.message = message;
+			this.isSend = isSend;
+		}
+	}
+	private ChatLog chatLog_head, chatLog_tail; // 消息记录链表
 	public void setMessage(String message, boolean isSend) {
+		long time = System.currentTimeMillis();
+		// 暂存消息记录
+		if (chatLog_head == null) {
+			chatLog_head = new ChatLog(time, message, isSend);
+			chatLog_tail = chatLog_head;
+		} else {
+			chatLog_tail.next = new ChatLog(time, message, isSend);
+			chatLog_tail = chatLog_tail.next;
+		}
+		// 更新UI
 		text2.setText(message);
 		if (contentView != null) {
-			contentView.showMessage(message, isSend);
+			contentView.showMessage(time, message, isSend);
 		}
 	}
 	
@@ -107,6 +129,9 @@ public class DeviceLayout extends LinearLayout {
 		if (contentView == null) {
 			contentView = (ChatLayout) LayoutInflater.from(context).inflate(R.layout.activity_main, null);
 			contentView.bind(handler, socket, title, this, printWriter);
+			for (ChatLog chatLog = chatLog_head; chatLog != null; chatLog = chatLog.next) { // 显示消息记录
+				contentView.showMessage(chatLog.time, chatLog.message, chatLog.isSend);
+			}
 			((Activity) context).getWindow().addContentView(contentView, new WindowManager.LayoutParams());
 		}
 		return result;
