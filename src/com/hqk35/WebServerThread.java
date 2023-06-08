@@ -1,27 +1,34 @@
 package com.hqk35;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
 public class WebServerThread extends Thread {
-	Handler handler;
-	ServerSocket mServerSocket;
-	boolean isLooping = true;
-	public WebServerThread(Handler handler) {
+	private Context context;
+	private Handler handler;
+	private ServerSocket mServerSocket;
+	private boolean isLooping = true;
+	public WebServerThread(Context context, Handler handler) {
+		this.context = context;
 		this.handler = handler;
 	}
+	public static final int port = 52013;
 	@Override
 	public void run() {
 		try {
-		    mServerSocket = new ServerSocket(MainActivity.port);
+		    mServerSocket = new ServerSocket(port);
 		    //mServerSocket.setReuseAddress(true);
 		    while (isLooping && !mServerSocket.isClosed()) {
 		        // 接收客户端套接字。
@@ -30,7 +37,7 @@ public class WebServerThread extends Thread {
 		            Socket socket = mServerSocket.accept();
 		            byte[] ipAddress = socket.getInetAddress().getAddress();
 		            Log.i("服务器", "===server accept===");
-			        new ServerThread(socket, handler, ipAddress).start();
+			        new ServerThread(socket, context, handler, ipAddress).start();
 	        	} catch (SocketException e) {
 	        		break;
 	        	}
@@ -57,30 +64,37 @@ public class WebServerThread extends Thread {
 }
 
 class ServerThread extends Thread {
-	Socket mSocket;
-	Handler handler;
-	byte[] ipAddress;
-	public ServerThread(Socket socket, Handler handler, byte[] ipAddress) {
+	private Socket mSocket;
+	private Context context;
+	private Handler handler;
+	private byte[] ipAddress;
+	private DeviceLayout view;
+	public ServerThread(Socket socket, Context context, Handler handler, byte[] ipAddress) {
 		mSocket = socket;
+		this.context = context;
 		this.handler = handler;
 		this.ipAddress = ipAddress;
 	}
 	@Override
 	public void run() {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(mSocket.getInputStream(), "utf-8"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(mSocket.getInputStream(), "UTF-8"));
 			Log.i("服务器", "开始线程");
-			StringBuilder result = new StringBuilder();
-			char[] buffer = new char[1024];
-			int len;
-			while ((len = reader.read(buffer)) != -1) { // 如果写>0的话，会漏掉空的行
-				Log.i("服务器", "读取一段数据");
-				result.append(buffer, 0, len);
+			PrintWriter printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(   //步骤二
+                    mSocket.getOutputStream(), "UTF-8")), true);
+            Log.i("客户端", "得到PrintWriter");
+			view = new DeviceLayout(context, handler, mSocket, new StringBuilder()
+					.append(ipAddress[0] & 0xFF).append('.')
+					.append(ipAddress[1] & 0xFF).append('.')
+					.append(ipAddress[2] & 0xFF).append('.')
+					.append(ipAddress[3] & 0xFF).toString(), printWriter);
+			handler.obtainMessage(2, 0, 0, view).sendToTarget();
+			String message;
+			while ((message = reader.readLine()) != null) {
+				Log.i("服务器", "读取一行数据");
+				handler.obtainMessage(2, 1, 2, new Object[] {view, message}).sendToTarget();
 			}
 			Log.i("服务器", "读取完数据");
-			String message = result.toString();
-			Log.i("数据", message);
-			handler.obtainMessage(2, new Object[] {ipAddress, message}).sendToTarget();
             /*// 返回数据
 			OutputStream os = null;
             try {
@@ -91,13 +105,20 @@ class ServerThread extends Thread {
             } finally {
             	os.close();
             }*/
+			mSocket.close();
+			mSocket = null;
+			handler.obtainMessage(2, 2, 0, view).sendToTarget(); // 如果是自己断开连接，在上面会抛出Exception，不会走到这里
+		} catch (SocketException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-            try {
-				mSocket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if (mSocket != null) {
+	            try {
+					mSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

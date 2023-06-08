@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hqk35.ChatLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,6 @@
     <com.hqk35.StatusBarInsetsLayout
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	android:orientation="vertical"
     	android:background="@drawable/skin_header_bar_bg"
     	android:fitsSystemWindows="true">
     	<TextView
@@ -18,6 +17,18 @@
     	    android:gravity="center"
     	    android:textColor="#fff"
     	    android:textSize="17dp" />
+    	<TextView
+    	    android:id="@+id/ivTitleBtnRightText"
+    	    android:layout_width="52dp"
+    	    android:layout_height="36dp"
+    	    android:layout_gravity="right|center_vertical"
+    	    android:paddingRight="2dp"
+    	    android:paddingBottom="1dp"
+    	    android:gravity="center"
+    	    android:includeFontPadding="false"
+    	    android:textColor="@color/skin_color_title_right_text"
+    	    android:textSize="17dp"
+    	    android:text="断开" />
     </com.hqk35.StatusBarInsetsLayout>
     
     <ScrollView
@@ -84,18 +95,9 @@
         android:layout_height="wrap_content"
         android:background="#ebedf5"
         android:fitsSystemWindows="true">
-        <EditText
-            android:id="@+id/targetIp"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:background="@null"
-            android:textColor="#03081a"
-            android:textSize="17dp"
-            android:hint="在此输入目标IP地址"
-            android:singleLine="true"
-            android:inputType="number"
-            android:digits="0123456789." />
+            android:layout_height="40dp" />
     </com.hqk35.WindowInsetsLayout>
 
-</LinearLayout>
+</com.hqk35.ChatLayout>

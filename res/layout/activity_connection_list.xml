@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+    
+    <com.hqk35.StatusBarInsetsLayout
+    	android:layout_width="match_parent"
+    	android:layout_height="wrap_content"
+    	android:background="@drawable/skin_header_bar_bg"
+    	android:fitsSystemWindows="true">
+    	<TextView
+    	    android:id="@+id/ivTitleName"
+    	    android:layout_width="match_parent"
+    	    android:layout_height="50dp"
+    	    android:gravity="center"
+    	    android:textColor="#fff"
+    	    android:textSize="17dp" />
+    	<ImageView
+    	    android:id="@+id/link_btn"
+    	    android:layout_width="36dp"
+    	    android:layout_height="30dp"
+    	    android:layout_gravity="right|center_vertical"
+    	    android:layout_marginRight="10dp"
+    	    android:src="@drawable/header_btn_add"
+    	    android:scaleType="center"
+    	    android:clickable="true"
+    	    android:onClick="connect" />
+    </com.hqk35.StatusBarInsetsLayout>
+    
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="1"
+        android:background="#fff">
+        <LinearLayout
+            android:id="@+id/recent_chat_list"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical">
+	        
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
