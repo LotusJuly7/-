@@ -11,6 +11,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.json.JSONException;
+import org.json.JSONTokener;
+
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
@@ -92,7 +95,11 @@ class ServerThread extends Thread {
 			String message;
 			while ((message = reader.readLine()) != null) {
 				Log.i("服务器", "读取一行数据");
-				handler.obtainMessage(2, 1, 2, new Object[] {view, message}).sendToTarget();
+				try {
+					handler.obtainMessage(2, 1, 2, new Object[] {view, (String) new JSONTokener(message).nextValue()}).sendToTarget();
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
 			}
 			Log.i("服务器", "读取完数据");
             /*// 返回数据

@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -111,7 +113,7 @@ public class ChatLayout extends LinearLayout {
 		}
 		@Override
 		public void run() {
-			printWriter.print(message);
+			printWriter.print(JSONObject.quote(message));
 			printWriter.print('\n');
             printWriter.flush();
             Log.i("¿Í»§¶Ë", "flush");

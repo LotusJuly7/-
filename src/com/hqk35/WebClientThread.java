@@ -10,6 +10,9 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import org.json.JSONException;
+import org.json.JSONTokener;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
@@ -45,7 +48,11 @@ public class WebClientThread extends Thread {
 	            String message;
 				while ((message = reader.readLine()) != null) {
 					Log.i("客户端", "读取一行数据");
-					handler.obtainMessage(1, 1, 2, new Object[] {view, message}).sendToTarget();
+					try {
+						handler.obtainMessage(1, 1, 2, new Object[] {view, (String) new JSONTokener(message).nextValue()}).sendToTarget();
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
 				}
 				Log.i("客户端", "读取完数据");
 				socket.close();
