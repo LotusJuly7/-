@@ -7,11 +7,13 @@ import java.text.SimpleDateFormat;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,6 +34,7 @@ public class ChatLayout extends LinearLayout {
 	@Override
 	protected void onFinishInflate() {
 		title = (TextView) findViewById(R.id.title);
+		findViewById(R.id.e89).setOnClickListener(navigateBack);
 		disconnect = (TextView) findViewById(R.id.ivTitleBtnRightText);
 		disconnect.setOnClickListener(disconnect_onClick);
 		listView1 = (LinearLayout) findViewById(R.id.listView1);
@@ -52,6 +55,13 @@ public class ChatLayout extends LinearLayout {
 		this.deviceLayout = deviceLayout;
 		this.printWriter = printWriter;
 	}
+	
+	private View.OnClickListener navigateBack = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			((ViewGroup) ((Activity) context).findViewById(android.R.id.content)).removeView(ChatLayout.this);
+		}
+	};
 	
 	private View.OnClickListener send_btn_onClick = new View.OnClickListener() {
 		@Override

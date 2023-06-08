@@ -17,6 +17,19 @@
     	    android:gravity="center"
     	    android:textColor="#fff"
     	    android:textSize="17dp" />
+    	<LinearLayout
+    	    android:id="@+id/e89"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="50dp"
+    	    android:orientation="horizontal"
+    	    android:paddingRight="10dp"
+    	    android:gravity="center_vertical">
+    	    <ImageView
+    	        android:layout_width="wrap_content"
+    	        android:layout_height="wrap_content"
+    	        android:layout_marginLeft="16dp"
+    	        android:background="@drawable/b6q" />
+    	</LinearLayout>
     	<TextView
     	    android:id="@+id/ivTitleBtnRightText"
     	    android:layout_width="52dp"
