@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,6 +51,8 @@ public class DeviceLayout extends LinearLayout {
 		iag.addView(text1, text1_lp);
 		
 		TextView text1_1 = new TextView(context);
+		text1_1.setSingleLine(true);
+		text1_1.setEllipsize(TextUtils.TruncateAt.END);
 		text1_1.setTextColor(0xff03081a);
 		text1_1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f);
 		text1_1.setText(title);
@@ -70,6 +73,8 @@ public class DeviceLayout extends LinearLayout {
 		LayoutParams text2_lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		text2_lp.rightMargin = (int) (12f * scale);
 		text2.setPadding(0, 0, (int) (10f * scale), 0);
+		text2.setSingleLine(true);
+		text2.setEllipsize(TextUtils.TruncateAt.END);
 		text2.setTextColor(0xff878b99);
 		text2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f);
 		iag.addView(text2, text2_lp);
