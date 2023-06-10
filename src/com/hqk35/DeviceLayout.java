@@ -2,6 +2,7 @@ package com.hqk35;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +21,7 @@ public class DeviceLayout extends LinearLayout {
 	private Socket socket;
 	private String title;
 	private PrintWriter printWriter;
-	private TextView text2;
+	private TextView text1_2, text2;
 	public DeviceLayout(Context context, Handler handler, Socket socket, String title, PrintWriter printWriter) {
 		super(context);
 		this.context = context;
@@ -42,13 +43,28 @@ public class DeviceLayout extends LinearLayout {
 		iag.setOrientation(LinearLayout.VERTICAL);
 		addView(iag, iag_lp);
 		
-		TextView text1 = new TextView(context);
+		LinearLayout text1 = new LinearLayout(context);
 		LayoutParams text1_lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		text1_lp.bottomMargin = (int) (2f * scale);
-		text1.setTextColor(0xff03081a);
-		text1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f);
-		text1.setText(title);
+		text1.setOrientation(HORIZONTAL);
 		iag.addView(text1, text1_lp);
+		
+		TextView text1_1 = new TextView(context);
+		text1_1.setTextColor(0xff03081a);
+		text1_1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17f);
+		text1_1.setText(title);
+		text1.addView(text1_1, new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f));
+		
+		text1_2 = new TextView(context);
+		LayoutParams text1_2_lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		text1_2_lp.gravity = Gravity.BOTTOM;
+		text1_2_lp.rightMargin = (int) (16f * scale);
+		text1_2.setPadding(0, 0, 0, (int) (2f * scale));
+		text1_2.setIncludeFontPadding(false);
+		text1_2.setTextColor(0xff878b99);
+		text1_2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f);
+		text1_2.setText(dateFormat.format(System.currentTimeMillis()));
+		text1.addView(text1_2, text1_2_lp);
 		
 		text2 = new TextView(context);
 		LayoutParams text2_lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -91,6 +107,7 @@ public class DeviceLayout extends LinearLayout {
 	        </LinearLayout>
 		*/
 	}
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
 	
 	private static class ChatLog {
 		long time;
@@ -115,6 +132,7 @@ public class DeviceLayout extends LinearLayout {
 			chatLog_tail = chatLog_tail.next;
 		}
 		// ¸üÐÂUI
+		text1_2.setText(dateFormat.format(time));
 		text2.setText(message);
 		if (contentView != null) {
 			contentView.showMessage(time, message, isSend);
