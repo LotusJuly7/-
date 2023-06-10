@@ -141,17 +141,11 @@ public class DeviceLayout extends LinearLayout {
 		contentView = null;
 	}
 	
-	public void onPassiveDisconnect() {
-		printWriter.close();
-		try {
-			socket.close();
-			if (contentView != null) {
-				contentView.onPassiveDisconnect();
-			}
-			removeSelf();
-		} catch (IOException e) {
-			e.printStackTrace();
+	public void onPassiveDisconnect(String message) {
+		if (contentView != null) {
+			contentView.onPassiveDisconnect(message);
 		}
+		removeSelf();
 	}
 	
 	public void removeSelf() {

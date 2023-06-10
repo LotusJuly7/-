@@ -101,10 +101,10 @@ public class ChatLayout extends LinearLayout {
 			}
 		}
 	};
-	public void onPassiveDisconnect() { // 隐藏“断开”按钮
+	public void onPassiveDisconnect(String message) { // 隐藏“断开”按钮
 		send_btn.setEnabled(false);
 		disconnect.setVisibility(View.GONE);
-		Toast.makeText(context, "对方断开了连接", Toast.LENGTH_SHORT).show();
+		Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 	
 	private static class SendThread extends Thread {

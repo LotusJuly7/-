@@ -47,7 +47,7 @@ public class ConnectionListActivity extends Activity {
 						((DeviceLayout) obj[0]).setMessage((String) obj[1], false);
 					}
 				} else if (msg.arg1 == 2) { // 对方断开连接
-					((DeviceLayout) msg.obj).onPassiveDisconnect();
+					((DeviceLayout) msg.obj).onPassiveDisconnect("对方断开了连接");
 				}
 			} else if (msg.what == 2) { // 自己是服务器
 				if (msg.arg1 == 0) { // 建立连接
@@ -60,7 +60,11 @@ public class ConnectionListActivity extends Activity {
 						((DeviceLayout) obj[0]).setMessage((String) obj[1], false);
 					}
 				} else if (msg.arg1 == 2) { // 对方断开连接
-					((DeviceLayout) msg.obj).onPassiveDisconnect();
+					((DeviceLayout) msg.obj).onPassiveDisconnect("对方断开了连接");
+				} else if (msg.arg1 == 3) { // 意外断开连接
+					if (msg.arg2 == 1) { // 连接已重置
+						((DeviceLayout) msg.obj).onPassiveDisconnect("连接已重置");
+					}
 				}
 			}
 		}

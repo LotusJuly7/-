@@ -80,10 +80,11 @@ class ServerThread extends Thread {
 	}
 	@Override
 	public void run() {
+		PrintWriter printWriter = null;
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(mSocket.getInputStream(), "UTF-8"));
 			Log.i("服务器", "开始线程");
-			PrintWriter printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(   //步骤二
+			printWriter = new PrintWriter(new BufferedWriter(new OutputStreamWriter(   //步骤二
                     mSocket.getOutputStream(), "UTF-8")), true);
             Log.i("客户端", "得到PrintWriter");
 			view = new DeviceLayout(context, handler, mSocket, new StringBuilder()
@@ -112,11 +113,23 @@ class ServerThread extends Thread {
             } finally {
             	os.close();
             }*/
+			printWriter.close();
 			mSocket.close();
 			mSocket = null;
 			handler.obtainMessage(2, 2, 0, view).sendToTarget(); // 如果是自己断开连接，在上面会抛出Exception，不会走到这里
 		} catch (SocketException e) {
 			e.printStackTrace();
+			if (e.getMessage().equals("Connection reset")) {
+				if (printWriter != null) {
+					printWriter.close();
+				}
+				try {
+					mSocket.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				handler.obtainMessage(2, 3, 1, view).sendToTarget(); // 连接已重置
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
