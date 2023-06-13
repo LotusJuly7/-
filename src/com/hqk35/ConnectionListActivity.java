@@ -1,5 +1,6 @@
 package com.hqk35;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -8,9 +9,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -25,7 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ConnectionListActivity extends Activity {
-	TextView ivTitleName;
+	TextView ivTitleName, title_sub;
 	LinearLayout recent_chat_list;
 	EditText targetIp;
 	Thread serverThread;
@@ -75,17 +79,58 @@ public class ConnectionListActivity extends Activity {
 		setContentView(R.layout.activity_connection_list);
 		
 		ivTitleName = (TextView) findViewById(R.id.ivTitleName);
+		title_sub = (TextView) findViewById(R.id.title_sub);
 		recent_chat_list = (LinearLayout) findViewById(R.id.recent_chat_list);
 		
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
 		intentFilter.addAction("android.net.wifi.WIFI_AP_STATE_CHANGED");
+		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 		registerReceiver(mWifiReceiver, intentFilter);
 		
 		serverThread = new WebServerThread(this, handler);
 		serverThread.start();
+		
+		// 在安卓10以上，WIFI_P2P_CONNECTION_CHANGED_ACTION变为非粘性，且需要ACCESS_FINE_LOCATION权限
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				displayP2pIp(true);
+	    	} else {
+	    		new AlertDialog.Builder(this).setTitle("权限申请")
+						.setMessage("我们需要使用【位置】权限才能实时监听 WLAN 直连状态")
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1314);
+							}
+						}).setCancelable(false).show();
+	    	}
+		}
 	}
-	
+	@Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1314) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            	displayP2pIp(true);
+            } else {
+            	Toast.makeText(this, "位置权限申请失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    void displayP2pIp(boolean isConnected) {
+    	String ipAddressUrl = null;
+    	if (isConnected) {
+	    	ipAddressUrl = Utils.getIpAddress("p2p");
+	    }
+	    if (ipAddressUrl != null) {
+	    	title_sub.setText("本机IP（直连）：" + ipAddressUrl);
+	    	title_sub.setVisibility(View.VISIBLE);
+	    } else {
+	    	title_sub.setVisibility(View.GONE);
+	    }
+    }
 	BroadcastReceiver mWifiReceiver = new BroadcastReceiver() {
 		String wifiIpText = null;
 		boolean isApEnabled = false;
@@ -111,6 +156,9 @@ public class ConnectionListActivity extends Activity {
                 }
             } else if (intent.getAction().equals("android.net.wifi.WIFI_AP_STATE_CHANGED")) {
             	isApEnabled = intent.getIntExtra("wifi_state", 0) == 13;
+            } else if (intent.getAction().equals(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION)) {
+            	NetworkInfo info = (NetworkInfo) intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
+            	displayP2pIp(info.isConnected());
             }
             if (wifiIpText != null) {
             	ivTitleName.setText(wifiIpText);
