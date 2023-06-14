@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -14,8 +13,6 @@ import android.util.Log;
 public class WebClientThread extends Thread {
 	Handler handler;
 	String ipAddress, message;
-	ServerSocket mServerSocket;
-	boolean isLooping = true;
 	public WebClientThread(Handler handler, String ipAddress, String message) {
 		this.handler = handler;
 		this.ipAddress = ipAddress;
