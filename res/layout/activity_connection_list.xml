@@ -1,66 +1,164 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/tabhost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="${relativePackage}.${activityClass}" >
     
-    <com.hqk35.StatusBarInsetsLayout
-    	android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:background="@drawable/skin_header_bar_bg"
-    	android:fitsSystemWindows="true">
-    	<FrameLayout
-    	    android:layout_width="match_parent"
-    	    android:layout_height="50dp">
-    	    <LinearLayout
-    	        android:layout_width="match_parent"
-    	        android:layout_height="wrap_content"
-    	        android:layout_gravity="center_vertical"
-    	        android:orientation="vertical"
-    	        android:gravity="center_horizontal">
-    	        <TextView
-		    	    android:id="@+id/ivTitleName"
-		    	    android:layout_width="match_parent"
-		    	    android:layout_height="wrap_content"
-		    	    android:gravity="center"
-		    	    android:textColor="#fff"
-		    	    android:textSize="17dp" />
-    	        <TextView
-		    	    android:id="@+id/title_sub"
-		    	    android:layout_width="match_parent"
-		    	    android:layout_height="wrap_content"
-		    	    android:gravity="center"
-		    	    android:includeFontPadding="false"
-		    	    android:textColor="#ccffffff"
-		    	    android:textSize="10dp"
-		    	    android:visibility="gone" />
-    	    </LinearLayout>
-    	</FrameLayout>
-    	<ImageView
-    	    android:id="@+id/link_btn"
-    	    android:layout_width="36dp"
-    	    android:layout_height="30dp"
-    	    android:layout_gravity="right|center_vertical"
-    	    android:layout_marginRight="10dp"
-    	    android:src="@drawable/header_btn_add"
-    	    android:scaleType="center"
-    	    android:clickable="true"
-    	    android:onClick="connect" />
-    </com.hqk35.StatusBarInsetsLayout>
-    
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:background="#f5f6fa">
-        <LinearLayout
-            android:id="@+id/recent_chat_list"
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical"
+	    tools:context="${relativePackage}.${activityClass}" >
+	    
+	    <FrameLayout
+	        android:id="@android:id/tabcontent"
+	        android:layout_width="match_parent"
+	        android:layout_height="0px"
+	        android:layout_weight="1">
+	        
+	        <LinearLayout
+	            android:id="@+id/tab_connection_list"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="vertical">
+			    
+			    <com.hqk35.StatusBarInsetsLayout
+			    	android:layout_width="match_parent"
+			    	android:layout_height="wrap_content"
+			    	android:background="@drawable/skin_header_bar_bg"
+			    	android:fitsSystemWindows="true">
+			    	<FrameLayout
+			    	    android:layout_width="match_parent"
+			    	    android:layout_height="50dp">
+			    	    <LinearLayout
+			    	        android:layout_width="match_parent"
+			    	        android:layout_height="wrap_content"
+			    	        android:layout_gravity="center_vertical"
+			    	        android:orientation="vertical"
+			    	        android:gravity="center_horizontal">
+			    	        <TextView
+					    	    android:id="@+id/ivTitleName"
+					    	    android:layout_width="match_parent"
+					    	    android:layout_height="wrap_content"
+					    	    android:gravity="center"
+					    	    android:textColor="#fff"
+					    	    android:textSize="17dp" />
+			    	        <TextView
+					    	    android:id="@+id/title_sub"
+					    	    android:layout_width="match_parent"
+					    	    android:layout_height="wrap_content"
+					    	    android:gravity="center"
+					    	    android:includeFontPadding="false"
+					    	    android:textColor="#ccffffff"
+					    	    android:textSize="10dp"
+					    	    android:visibility="gone" />
+			    	    </LinearLayout>
+			    	</FrameLayout>
+			    	<ImageView
+			    	    android:id="@+id/link_btn"
+			    	    android:layout_width="36dp"
+			    	    android:layout_height="30dp"
+			    	    android:layout_gravity="right|center_vertical"
+			    	    android:layout_marginRight="10dp"
+			    	    android:src="@drawable/header_btn_add"
+			    	    android:scaleType="center"
+			    	    android:clickable="true"
+			    	    android:onClick="connect" />
+			    </com.hqk35.StatusBarInsetsLayout>
+			    
+			    <ScrollView
+			        android:layout_width="match_parent"
+			        android:layout_height="0px"
+			        android:layout_weight="1"
+			        android:background="#f5f6fa">
+			        <LinearLayout
+			            android:id="@+id/recent_chat_list"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:orientation="vertical">
+				        
+			        </LinearLayout>
+			    </ScrollView>
+			
+			</LinearLayout>
+			
+	        <com.hqk35.DiscoverLayout
+	            android:id="@+id/tab_discover"
+			    android:layout_width="match_parent"
+			    android:layout_height="match_parent"
+			    android:orientation="vertical">
+			    
+			    <com.hqk35.StatusBarInsetsLayout
+			    	android:layout_width="match_parent"
+			    	android:layout_height="wrap_content"
+			    	android:background="@drawable/skin_header_bar_bg"
+			    	android:fitsSystemWindows="true">
+			    	<FrameLayout
+			    	    android:layout_width="match_parent"
+			    	    android:layout_height="50dp">
+			    	    <LinearLayout
+			    	        android:layout_width="match_parent"
+			    	        android:layout_height="wrap_content"
+			    	        android:layout_gravity="center_vertical"
+			    	        android:orientation="vertical"
+			    	        android:gravity="center_horizontal">
+			    	        <TextView
+					    	    android:layout_width="match_parent"
+					    	    android:layout_height="wrap_content"
+					    	    android:gravity="center"
+					    	    android:textColor="#fff"
+					    	    android:textSize="17dp"
+					    	    android:text="发现" />
+			    	        <TextView
+			    	            android:id="@+id/discover_status"
+					    	    android:layout_width="match_parent"
+					    	    android:layout_height="wrap_content"
+					    	    android:gravity="center"
+					    	    android:includeFontPadding="false"
+					    	    android:textColor="#ccffffff"
+					    	    android:textSize="10dp" />
+			    	    </LinearLayout>
+			    	</FrameLayout>
+			    	<ImageView
+			    	    android:id="@+id/settings_btn"
+			    	    android:layout_width="36dp"
+			    	    android:layout_height="30dp"
+			    	    android:layout_gravity="right|center_vertical"
+			    	    android:layout_marginRight="10dp"
+			    	    android:src="@drawable/op"
+			    	    android:scaleType="center"
+			    	    android:clickable="true" />
+			    </com.hqk35.StatusBarInsetsLayout>
+			    
+			    <ScrollView
+			        android:layout_width="match_parent"
+			        android:layout_height="0px"
+			        android:layout_weight="1"
+			        android:background="#f5f6fa">
+			        <LinearLayout
+			            android:id="@+id/nearby_device_list"
+				        android:layout_width="match_parent"
+				        android:layout_height="wrap_content"
+				        android:orientation="vertical"
+				        android:paddingLeft="16dp"
+				        android:paddingTop="12dp"
+				        android:paddingRight="16dp">
+				        
+			        </LinearLayout>
+			    </ScrollView>
+			
+			</com.hqk35.DiscoverLayout>
+	        
+	    </FrameLayout>
+	    
+	    <TabWidget
+	        android:id="@android:id/tabs"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:orientation="vertical">
-	        
-        </LinearLayout>
-    </ScrollView>
+	        android:background="@drawable/skin_bottom_bar_background_theme_version2"
+	        android:showDividers="none" />
+	
+	</LinearLayout>
 
-</LinearLayout>
+</TabHost>

@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +78,13 @@ public class ConnectionListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_connection_list);
+		
+		TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		tabHost.addTab(tabHost.newTabSpec("connection_list")
+				.setIndicator(new TabItemWidget(this, "连接", R.drawable.tab_icon_conversation_selector)).setContent(R.id.tab_connection_list));
+		tabHost.addTab(tabHost.newTabSpec("discover")
+				.setIndicator(new TabItemWidget(this, "发现", R.drawable.b5e)).setContent(R.id.tab_discover));
 		
 		ivTitleName = (TextView) findViewById(R.id.ivTitleName);
 		title_sub = (TextView) findViewById(R.id.title_sub);
