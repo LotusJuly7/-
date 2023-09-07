@@ -38,9 +38,8 @@ public class WebServerThread extends Thread {
 		        try {
 		        	// 阻塞接受客户端。
 		            Socket socket = mServerSocket.accept();
-		            byte[] ipAddress = socket.getInetAddress().getAddress();
 		            Log.i("服务器", "===server accept===");
-			        new ServerThread(socket, context, handler, ipAddress).start();
+			        new ServerThread(socket, context, handler).start();
 	        	} catch (SocketException e) {
 	        		break;
 	        	}
@@ -71,12 +70,14 @@ class ServerThread extends Thread {
 	private Context context;
 	private Handler handler;
 	private byte[] ipAddress;
+	private int remotePort;
 	private DeviceLayout view;
-	public ServerThread(Socket socket, Context context, Handler handler, byte[] ipAddress) {
+	public ServerThread(Socket socket, Context context, Handler handler) {
 		mSocket = socket;
 		this.context = context;
 		this.handler = handler;
-		this.ipAddress = ipAddress;
+		ipAddress = socket.getInetAddress().getAddress();
+		remotePort = socket.getPort();
 	}
 	@Override
 	public void run() {
@@ -91,7 +92,7 @@ class ServerThread extends Thread {
 					.append(ipAddress[0] & 0xFF).append('.')
 					.append(ipAddress[1] & 0xFF).append('.')
 					.append(ipAddress[2] & 0xFF).append('.')
-					.append(ipAddress[3] & 0xFF).toString(), printWriter);
+					.append(ipAddress[3] & 0xFF).append(':').append(remotePort).toString(), printWriter);
 			handler.obtainMessage(2, 0, 0, view).sendToTarget();
 			String message;
 			while ((message = reader.readLine()) != null) {
