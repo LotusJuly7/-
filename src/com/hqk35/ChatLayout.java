@@ -88,7 +88,7 @@ public class ChatLayout extends LinearLayout {
 	
 	private View.OnClickListener disconnect_onClick = new View.OnClickListener() {
 		@Override
-		public void onClick(View v) {
+		public void onClick(View v) { // 调用shutdownOutput可以单方面关闭自己的输出流
 			send_btn.setEnabled(false);
 			printWriter.close();
 			try {
